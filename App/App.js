@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const PORT = process.env.PORT || 3001
 
 const signUpRouter = require("./router/auth");
+const signRouter = require("./router/apiRouter");
 const mongoose = require('mongoose');
 
 const methodOverride = require('method-override')
@@ -32,5 +33,6 @@ app.use(
 );
 
 app.use('/', signUpRouter)
+app.use('/api', signRouter)
 
 app.listen(PORT, () => console.log(`run success ${PORT}`))

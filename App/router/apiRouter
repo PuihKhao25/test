@@ -1,0 +1,15 @@
+const express = require("express");
+const router = express.Router();
+const AuthController = require('../controller/apiController')
+const upload = require('../midleware/upload')
+const validate = require("../validate/validate")
+
+
+router.post("/api/post-sign-up", upload.single("avatar"), validate.validateRegisterUser(), validate.validationRegError, AuthController.postSignUp);
+router.post("/api/post-login", AuthController.postLogin);
+router.post("/api/deleteUser/:id", AuthController.deleteUser);
+router.put("/api/editUser/:id", AuthController.postEditUser);
+router.get("/api", AuthController.homeManage);
+
+
+module.exports = router
