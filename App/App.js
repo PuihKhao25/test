@@ -1,4 +1,4 @@
-require('dotenv').config({ path: '.env' });
+require('dotenv').config();
 const cors = require('cors');
 const express = require('express');
 const app = express();
@@ -11,10 +11,9 @@ const mongoose = require('mongoose');
 
 const methodOverride = require('method-override')
 
-mongoose.connect((process.env.MONGODB_URL), () => {
-    console.log('connect DB success')
-})
+const connectDB = require('./data/connectDB')
 
+connectDB()
 
 app.use(methodOverride('_method'))
 app.use(cors())
