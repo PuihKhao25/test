@@ -12,8 +12,8 @@ const validateRegisterUser = () => {
         body("password").notEmpty().withMessage("Password: Nhập từ 4-16 kí tự bao gồm cả chữ thường và số"),
 
         body("name").notEmpty().isLength({ max: 16 }).withMessage("Name: Tối đa 16 kí tự"),
-        body("avatar")
-        .notEmpty().withMessage("avatar: kích thước tối đa 512 x 512 (px)"),
+        // body("avatar")
+        // .notEmpty().withMessage("avatar: kích thước tối đa 512 x 512 (px)"),
     ];
 };
 
