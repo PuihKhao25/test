@@ -7,7 +7,7 @@ const validate = require("../validate/validate")
 router.get("/sign-up", AuthLoginController.signUp);
 router.get("/login", AuthLoginController.login);
 router.post("/post-sign-up", upload.single("avatar"), validate.validateRegisterUser(), validate.validationRegError, AuthLoginController.postSignUp);
-router.post("/post-login", AuthLoginController.postLogin);
+router.post("/post-login",  validate.validateRegisterUser(),AuthLoginController.postLogin);
 
 router.get("/", AuthLoginController.homeManage);
 router.post("/deleteUser/:id", AuthLoginController.deleteUser);

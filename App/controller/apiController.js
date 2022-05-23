@@ -5,42 +5,58 @@ const sha256 = require('crypto-js/sha256');
 const crypto = require('crypto');
 class AuthController {
 
-    postLogin(req, res, next) {
-        const password = crypto.createHash('sha256').update(req.body.password).digest('base64')
-        const userId = users.findOne({ id: req.body.id, password: password }).then(users => {
-            res.json(
-                {
-                    success: 'Thành công'
-                }
-            )
-        }).catch(err => res.json({
-            err: 'thất bại '
-        }))
-    }
-    postSignUp = async (req, res, next) => {
-        try {
-            let user = await new users({
-                id: req.body.id,
-                name: req.body.name,
-                email: req.body.email,
-                password: crypto.createHash('sha256').update(req.body.password).digest('base64'),
-                avatar: req.file.filename || ''
+    postLogin = async (req, res, next) => {
+        const id = req.body.id
+        const password = crypto.createHash('sha256').update(req.body.password).digest('base64');
 
+        console.log(id);
+        if (!id || !password) {
+            return res.status(400).json({
+                success: false, message: 'Missing user name , email or password'
             })
-            await user.save().then(() => {
-                res.json(
-                    {
-                        success: 'Thành công'
-                    }
-                )
-            })
+        }
+
+        const user = users.findOne({ id: id, password: password }).then((user) => {
+            if (user) {
+                res.json('thành công')
+            }
+            else {
+               
+                res.json('thất bại')
+            }
+        })
+
+    }
+
+    
+    postSignUp = async (req, res, next) => {
+        const errors = validationResult(req);
+        try {
+            
+        if (!errors.isEmpty()) {
+            console.log("Lỗi");
+            res.json('lỗi')
+            return;
+        }
+        let filePath
+        if (req.file) {
+            filePath = req.file.filename
+        } else {
+            filePath = ''
+        }
+        let user = await new users({
+            id: req.body.id,
+            name: req.body.name,
+            email: req.body.email,
+            password: crypto.createHash('sha256').update(req.body.password).digest('base64'),
+            avatar: filePath
+        })
+
+        await user.save().then(() => {
+            res.json('thành công')
+        })
         } catch (e) {
-            console.log(e)
-            res.json(
-                {
-                    err: 'thất bại '
-                }
-            )
+            res.json('thất bại')
         }
 
     }

@@ -3,6 +3,8 @@ const users = require('../model/Users');
 const { validationResult } = require('express-validator');
 const sha256 = require('crypto-js/sha256');
 const crypto = require('crypto');
+
+
 class AuthLoginController {
     signUp(req, res, next) {
         res.render('../views/signUp.ejs');
@@ -12,24 +14,58 @@ class AuthLoginController {
         res.render('../views/login.ejs');
     }
 
-    postLogin(req, res, next) {
+    // postLogin(req, res, next) {
 
-        const password = crypto.createHash('sha256').update(req.body.password).digest('base64')
+    //     const password = crypto.createHash('sha256').update(req.body.password).digest('base64')
 
-        const userId = users.findOne({ id: req.body.id, password: password }).then(users => {
+    //     const userId = users.findOne({ id: req.body.id, password: password }).then(users => {
 
-            res.redirect("/")
-        }).catch(err => res.send(err))
+    //         res.redirect("/")
+    //     }).catch(err => res.send(err))
+    // }
+    postLogin = async (req, res, next) => {
+        const id = req.body.id
+        const password = crypto.createHash('sha256').update(req.body.password).digest('base64');
+
+        console.log(id);
+        // if (!id || !password) {
+        //     return res.status(400).json({
+        //         success: false, message: 'Missing user name , email or password'
+        //     })
+        // }
+
+        const user = users.findOne({ id: id, password: password }).then((user) => {
+            if (user) {
+                res.redirect('/')
+            }
+            else {
+               
+                res.redirect('/login')
+            }
+        })
+
     }
 
+
     postSignUp = async (req, res, next) => {
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            console.log("Lỗi");
+            return;
+        }
+        let filePath
+        if (req.file) {
+            filePath = req.file.filename
+        } else {
+            filePath = ''
+        }
         let user = await new users({
             id: req.body.id,
             name: req.body.name,
             email: req.body.email,
             password: crypto.createHash('sha256').update(req.body.password).digest('base64'),
-            avatar: req.file.filename || ''
-
+            avatar: filePath
         })
 
         await user.save().then(() => {
@@ -37,9 +73,6 @@ class AuthLoginController {
         })
 
     }
-    // homeManage(req, res, next) {
-    //     res.render('../views/index.ejs');
-    // }
     getEditUser = async (req, res, next) => {
         console.log(req.params.id)
 

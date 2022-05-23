@@ -11,5 +11,4 @@ router.post("/api/deleteUser/:id", AuthController.deleteUser);
 router.put("/api/editUser/:id", AuthController.postEditUser);
 router.get("/api", AuthController.homeManage);
 
-
 module.exports = router

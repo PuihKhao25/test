@@ -14,6 +14,7 @@ const validateRegisterUser = () => {
         body("name").notEmpty().isLength({ max: 16 }).withMessage("Name: Tối đa 16 kí tự"),
         // body("avatar")
         // .notEmpty().withMessage("avatar: kích thước tối đa 512 x 512 (px)"),
+        
     ];
 };
 
